@@ -1,5 +1,6 @@
 import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
 import { IndexPage } from "../page_objects/pesquisa_page";
+import searchElements from "../../fixtures/processos.json"; // Adicione esta linha [cite: 1]
 
 const indexPage = new IndexPage();
 
@@ -57,11 +58,41 @@ When("seleciono o filtro {string} como {string}", (tipo, valor) => {
   indexPage.selecionarFiltro(tipo, valor);
 });
 
+// Step para validar se os campos continuam preenchidos
+Then("os filtros devem permanecer preenchidos", (dataTable) => {
+    const dados = dataTable.rowsHash();
+    Object.entries(dados).forEach(([campo, valor]) => {
+        const seletor = searchElements.selects[campo] || searchElements.search[campo];
+        
+        cy.get(seletor).then(($el) => {
+            const val = $el.val();
+            // Para selects, validamos se o texto ou o value contém o esperado
+            if ($el.prop("tagName").toLowerCase() === "select") {
+                // No caso do município, ele pode salvar o ID, então validamos a opção selecionada
+                cy.wrap($el).find('option:selected').should('contain', valor);
+            } else {
+                expect(val).to.contain(valor);
+            }
+        });
+    });
+});
+
+// Step de performance baseado na ideia do seu amigo
+Then("os seletores devem carregar em menos de {int} ms", (tempoLimite) => {
+    const start = Date.now();
+    indexPage.abrirBuscaAvancada();
+    cy.get(searchElements.selects.status).should("be.visible").then(() => {
+        const elapsed = Date.now() - start;
+        expect(elapsed).to.be.lessThan(tempoLimite);
+    });
+});
+
 // Clique no botão buscar
 When("clico no botão buscar", () => {
   cy.intercept("GET", "**/v2/licitacao/processos*").as("buscaApi");
   indexPage.clicarBuscar();
 });
+
 
 // Validação da resposta da API
 Then("a API deve retornar os resultados com sucesso", () => {

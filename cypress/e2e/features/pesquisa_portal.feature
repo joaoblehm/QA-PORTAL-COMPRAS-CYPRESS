@@ -32,7 +32,7 @@ Funcionalidade: Filtros de Pesquisa do Portal
       | realizacao | Eletrônico          |
       | julgamento | Técnica e Preço     |
       | uf         | RS                  |
-   E seleciono o filtro "municipios" como "Arambaré"
+    E seleciono o filtro "municipios" como "Arambaré"
     Então os filtros devem permanecer preenchidos
       | objeto     | 14.07.23 Conc Tecnica Preco Propostas |
       | municipios | Arambaré                              |

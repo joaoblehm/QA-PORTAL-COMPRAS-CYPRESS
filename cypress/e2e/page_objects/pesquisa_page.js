@@ -58,12 +58,20 @@ export class IndexPage {
         cy.get(searchElements.search.blocoBuscaAvancada).should("not.be.visible");
     }
 
-    // Seleciona filtros de forma inteligente
+
     selecionarFiltro(tipo, valor) {
         const seletor = searchElements.selects[tipo] || searchElements.search[tipo];
 
         if (!seletor) {
-            cy.log(`⚠️ Seletor para "${tipo}" não encontrado no JSON.`);
+            cy.log(`⚠️ Seletor para "${tipo}" não encontrado.`);
+            return;
+        }
+
+        // Se estiver selecionando UF, precisamos garantir que o município recarregue depois
+        if (tipo === 'uf') {
+            cy.get(seletor).select(valor, { force: true });
+            // Aguarda o select de municípios ser habilitado ou atualizar (comum em portais)
+            cy.get(searchElements.selects.municipios).should('not.be.disabled');
             return;
         }
 
@@ -71,27 +79,18 @@ export class IndexPage {
             const tagName = $el.prop("tagName").toLowerCase();
 
             if (tagName === "select") {
-                if (tipo.toLowerCase() === "municipios") {
-                    // Valida que o select tem pelo menos uma opção
-                    cy.get("#municipios option", { timeout: 10000 })
-                      .should("have.length.greaterThan", 0);
+                if (tipo === "municipios") {
+                    // Garante que o select não está apenas com o "Carregando..." ou vazio
+                    cy.get(`${seletor} option`, { timeout: 10000 })
+                        .should("have.length.gt", 1);
 
-                    // Tratamento especial para Arambaré
-                    const valorFinal = valor.trim() === "Arambaré" ? "100143016" : valor;
-                    cy.get("#municipios").select(valorFinal, { force: true });
+                    const valorFinal = valor === "Arambaré" ? "100143016" : valor;
+                    cy.get(seletor).select(valorFinal, { force: true });
                 } else {
-                    // Seleção normal em outros dropdowns
                     cy.wrap($el).select(valor, { force: true });
                 }
-
-                cy.log(`✅ Selecionado no dropdown [${tipo}]: ${valor}`);
             } else {
-                // Caso seja campo de texto
-                cy.wrap($el)
-                    .should("be.visible")
-                    .clear({ force: true })
-                    .type(valor, { force: true });
-                cy.log(`⌨️ Preenchido no input [${tipo}]: ${valor}`);
+                cy.wrap($el).clear({ force: true }).type(valor, { force: true });
             }
         });
     }

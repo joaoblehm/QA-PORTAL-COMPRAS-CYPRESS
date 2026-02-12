@@ -34,7 +34,7 @@ async function setupNodeEvents(on, config) {
 
 module.exports = defineConfig({
   e2e: {
-    baseUrl: "https://www.pcphom.com.br",
+    baseUrl: "https://www.pcpdev.com.br",
     specPattern: "**/*.feature", // Faz o Cypress procurar por arquivos .feature
     setupNodeEvents,
   },

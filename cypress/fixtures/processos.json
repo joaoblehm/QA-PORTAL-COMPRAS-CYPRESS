@@ -4,6 +4,7 @@
     "innerContainer": "section.container-fluid.pesquisa-processo > .container",
     "form": "form#pesquisa-p"
   },
+
   "search": {
     "titulo": "h2:contains('Pesquisa de Processos')",
     "objeto": "#objeto",
@@ -13,6 +14,7 @@
     "buscaAvancada": ".busca-av",
     "blocoBuscaAvancada": ".busca-av-block"
   },
+
   "selects": {
     "status": "#Status",
     "modalidade": "#Modalidade",
@@ -21,6 +23,7 @@
     "uf": "#UF",
     "municipios": "#municipios"
   },
+
   "periodo": {
     "label": "label[for='periodo']",
     "calendarBlock": ".calendario-block",
@@ -30,17 +33,20 @@
     "dias": ".vfc-day .vfc-span-day",
     "hoje": ".vfc-span-day.vfc-today"
   },
+
   "classes": {
     "buscaAvAberta": ".busca-av.open",
     "buscaAvFechada": ".busca-av:not(.open)",
     "selectPadrao": ".custom-select"
   },
+
   "labels": {
     "objeto": "label[for='filtro']",
     "processo": "label[for='processo']",
     "orgao": "label[for='orgao']",
     "periodo": "label[for='periodo']"
   },
+
   "icons": {
     "iconeFiltro": ".ico-cp.cp-filtro",
     "iconeFechar": ".ico-cp.cp-fechar",
