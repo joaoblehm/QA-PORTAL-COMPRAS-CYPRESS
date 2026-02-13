@@ -1,93 +1,59 @@
 Portal de Compras - Testes Automatizados com Cypress
-
 📌 Visão Geral
+Este projeto contém uma suíte de testes automatizados para validar o Portal de Compras. O foco principal é garantir a integridade dos filtros de pesquisa (simples e avançada) e a comunicação correta com a API de processos.
 
-Este projeto contém testes automatizados para validar funcionalidades do Portal de Compras, com foco nos filtros de pesquisa simples e avançada. Os cenários foram escritos em Gherkin para facilitar a leitura e entendimento por todos os envolvidos.
+🎯 Funcionalidades Testadas
+Pesquisa Simples: Validação de campos de texto (Objeto, Processo, Órgão).
 
-🎯 Funcionalidade
+Busca Avançada: Expansão de filtros e seleções dinâmicas (UF e Municípios).
 
-Filtros de Pesquisa do Portal
+Persistência de Estado: Garantia de que os dados inseridos permanecem nos campos após interações.
 
-Como usuário do portal de compras, desejo utilizar filtros de pesquisa simples e avançada para localizar processos específicos com precisão e eficiência.
+🧪 Cenários de Teste (Gherkin)
+Os cenários seguem a estrutura BDD para maior clareza:
 
-⚙️ Contexto
+@interface: Valida se os elementos básicos estão visíveis ao carregar a página.
 
-O usuário acessa a página de pesquisa pública.
+@busca_avancada: Testa a abertura do painel de filtros extras e a performance de carregamento.
 
-🧪 Cenários de Teste
+@pesquisa_completa: Executa um fluxo ponta a ponta, incluindo o tratamento especial para municípios (ex: Arambaré) e validação de resposta 200 OK da API.
 
-@interface @regressao
+🚀 Tecnologias e Padrões
+Cypress: Framework de automação.
 
-Validar renderização e acessibilidade dos filtros iniciais
+Cucumber (Badeball): Suporte para sintaxe Gherkin.
 
-Os campos "Objeto", "Processo" e "Órgão" devem estar visíveis.
+Page Object Model (POM): Estrutura organizada em pesquisa_page.js para facilitar a manutenção.
 
-O botão "BUSCAR" deve estar disponível.
-
-A seção "Busca Avançada" deve estar oculta inicialmente.
-
-@busca_avancada @funcional
-
-Validar abertura da busca avançada
-
-Ao clicar em "Busca Avançada", os filtros avançados devem ser exibidos.
-
-@pesquisa_completa
-
-Realizar pesquisa completa com critérios específicos
-
-Preencher os campos básicos:
-
-Objeto: 14.07.23 Conc Tecnica Preco Propostas
-
-Processo: 14.07.23 Conc Tecnica Preco Propostas
-
-Órgão: Luiz
-
-Abrir a busca avançada.
-
-Preencher os filtros avançados:
-
-Status: Recebendo Propostas
-
-Modalidade: Concorrência
-
-Realização: Eletrônico
-
-Julgamento: Técnica e Preço
-
-UF: RS
-
-Municípios: Arambaré
-
-Validar que os filtros permanecem preenchidos.
-
-Clicar em "BUSCAR".
-
-A API deve retornar os resultados com sucesso.
-
-🚀 Tecnologias Utilizadas
-
-Cypress para automação de testes.
-
-Linguagem Gherkin para especificação de cenários.
-
-▶️ Como Executar os Testes
-
-Instale as dependências:
-
-npm install
-
-Execute os testes:
-
-npx cypress open
+Data-Driven Testing: Centralização de seletores e dados em arquivos JSON.
 
 📂 Estrutura do Projeto
+Plaintext
 
-cypress/e2e/ → Contém os cenários de teste escritos em Gherkin.
+cypress/
+├── e2e/
+│   ├── features/          # Cenários escritos em Gherkin (.feature)
+│   └── step_definitions/  # Implementação dos passos em JS
+├── support/
+│   └── page_objects/      # Lógica de interação com a página (POM)
+└── fixtures/              # Massa de dados e seletores (processos.json)
+▶️ Como Executar os Testes
+Instale as dependências:
 
-cypress.config.js → Configuração do Cypress.
+Bash
 
-✅ Objetivo
+npm install
+Abrir a interface do Cypress:
 
-Garantir que os filtros de pesquisa do Portal de Compras funcionem corretamente, oferecendo ao usuário uma experiência eficiente e confiável na busca por processos.
+Bash
+
+npx cypress open
+Executar via terminal (Headless):
+
+Bash
+
+npx cypress run
+🛠️ Ajustes de Estabilidade Realizados
+Sincronismo de API: O teste aguarda automaticamente o carregamento da lista de municípios após a seleção da UF para evitar falhas de "elemento desabilitado".
+
+Validação de Selects: Implementada lógica para validar o texto visível da opção selecionada, garantindo que o filtro realmente persistiu o dado correto.
